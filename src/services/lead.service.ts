@@ -56,6 +56,11 @@ export class LeadService {
     }
 
     getLeadSummary() {
+
+        if (!fs.existsSync(OUTPUT_PATH)) {
+            throw new Error("Data not found. Please run POST /analyze first.");
+        }
+
         const raw = fs.readFileSync(OUTPUT_PATH, "utf-8");
         const leads: Lead[] = JSON.parse(raw);
 
@@ -83,8 +88,14 @@ export class LeadService {
     }
 
     getLeadByPhone(phone: string): Lead[] {
+
+        if (!fs.existsSync(OUTPUT_PATH)) {
+            throw new Error("Data not found. Please run POST /analyze first.");
+        }
+
         const raw = fs.readFileSync(OUTPUT_PATH, "utf-8");
         const leads: Lead[] = JSON.parse(raw);
+
         return leads.filter(lead => lead.phone === phone);
     }
 }
