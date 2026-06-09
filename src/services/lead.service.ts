@@ -63,12 +63,21 @@ export class LeadService {
         const rentals = leads.filter(l => l.property_type === "rental");
         const sales = leads.filter(l => l.property_type === "sale");
 
+        const dates = leads.map(l => new Date(l.contact_date).getTime());
+        const minDate = new Date(Math.min(...dates));
+        const maxDate = new Date(Math.max(...dates));
+        const months = (maxDate.getFullYear() - minDate.getFullYear()) * 12 + (maxDate.getMonth() - minDate.getMonth()) || 1;
+
         return {
             total_leads: leads.length,
             unique_locations: locations.size,
             avg_budget: {
                 rental: rentals.reduce((sum, l) => sum + l.budget, 0) / rentals.length,
                 sale: sales.reduce((sum, l) => sum + l.budget, 0) / sales.length,
+            },
+            avg_inquiry_rate: {
+                per_month: parseFloat((leads.length / months).toFixed(2)),
+                timeframe: `${minDate.toISOString().slice(0, 7)} to ${maxDate.toISOString().slice(0, 7)}`
             }
         };
     }
