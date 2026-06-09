@@ -10,4 +10,8 @@ export interface Lead {
     contact_date: string;
     inquiry_notes: string;
     is_duplicate: boolean;
+    is_valid_email: boolean;
+    is_valid_phone: boolean;
+    is_valid_budget: boolean;
+    is_valid_property_type: boolean;
 }

@@ -15,7 +15,11 @@ export class LeadController {
         return res.json({
             info: {
                 total: result.length,
-                duplicates: result.filter(lead => lead.is_duplicate).length
+                duplicates: result.filter(lead => lead.is_duplicate).length,
+                valid_emails: result.filter(lead => lead.is_valid_email).length,
+                valid_phones: result.filter(lead => lead.is_valid_phone).length,
+                valid_budgets: result.filter(lead => lead.is_valid_budget).length,
+                valid_property_types: result.filter(lead => lead.is_valid_property_type).length
             },
             items: result
         });

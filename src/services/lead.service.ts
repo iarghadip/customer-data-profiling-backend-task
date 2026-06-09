@@ -23,10 +23,35 @@ export class LeadService {
             phone: lead.phone.trim(),
             email: lead.email.trim().toLowerCase(),
             budget: Number(lead.budget),
+            preferred_property_type: lead.preferred_property_type.trim().toLowerCase(),
             is_duplicate: phoneCounts[lead.phone] > 1,
+            is_valid_email: this.isValidEmail(lead.email),
+            is_valid_phone: this.isValidPhone(lead.phone),
+            is_valid_budget: this.isValidBudget(lead.budget, lead.property_type),
+            is_valid_property_type: this.isValidPropertyType(lead.preferred_property_type),
         }));
 
         fs.writeFileSync(OUTPUT_PATH, JSON.stringify(analyzed, null, 2));
         return analyzed;
+    }
+
+    private isValidEmail(email: string): boolean {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    private isValidPhone(phone: string): boolean {
+        return /^\+\d{11}$/.test(phone);
+    }
+
+    private isValidPropertyType(preferred_property_type: string): boolean {
+        const allowed = ["apartment", "house", "condo", "townhouse"];
+        return allowed.includes(preferred_property_type.trim().toLowerCase());
+    }
+
+    private isValidBudget(budget: number, property_type: string): boolean {
+        if (budget <= 0) return false;
+        if (property_type === "rental") return budget >= 1000 && budget <= 5000;
+        if (property_type === "sale") return budget >= 100000;
+        return false;
     }
 }
