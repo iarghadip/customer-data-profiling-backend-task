@@ -55,6 +55,24 @@ export class LeadService {
         return false;
     }
 
+    getLeadSummary() {
+        const raw = fs.readFileSync(OUTPUT_PATH, "utf-8");
+        const leads: Lead[] = JSON.parse(raw);
+
+        const locations = new Set(leads.map(l => l.location));
+        const rentals = leads.filter(l => l.property_type === "rental");
+        const sales = leads.filter(l => l.property_type === "sale");
+
+        return {
+            total_leads: leads.length,
+            unique_locations: locations.size,
+            avg_budget: {
+                rental: rentals.reduce((sum, l) => sum + l.budget, 0) / rentals.length,
+                sale: sales.reduce((sum, l) => sum + l.budget, 0) / sales.length,
+            }
+        };
+    }
+
     getLeadByPhone(phone: string): Lead[] {
         const raw = fs.readFileSync(OUTPUT_PATH, "utf-8");
         const leads: Lead[] = JSON.parse(raw);

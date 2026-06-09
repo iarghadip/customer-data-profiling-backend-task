@@ -25,6 +25,12 @@ export class LeadController {
         });
     }
 
+    @httpGet('/leadSummary')
+    getLeadSummary(req: Request, res: Response) {
+        const result = this._leadService.getLeadSummary();
+        return res.json(result);
+    }
+
     @httpGet('/lead/:leadPhoneNumber')
     getLeadByPhone(req: Request, res: Response) {
         const phone = req.params.leadPhoneNumber;
