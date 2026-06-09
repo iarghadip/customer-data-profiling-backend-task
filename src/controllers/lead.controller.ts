@@ -1,4 +1,4 @@
-import { controller, httpPost } from "inversify-express-utils";
+import { controller, httpPost, httpGet } from "inversify-express-utils";
 import { Request, Response } from "express";
 import { inject } from "inversify";
 import { LeadService } from "../services/lead.service";
@@ -23,5 +23,17 @@ export class LeadController {
             },
             items: result
         });
+    }
+
+    @httpGet('/lead/:leadPhoneNumber')
+    getLeadByPhone(req: Request, res: Response) {
+        const phone = req.params.leadPhoneNumber;
+        const result = this._leadService.getLeadByPhone(phone);
+
+        if (result.length === 0) {
+            return res.status(404).json({ message: "Lead was not found!" });
+        }
+
+        return res.json({ info: {phone, total: result.length}, data: result });
     }
 }

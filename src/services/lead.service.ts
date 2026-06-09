@@ -54,4 +54,10 @@ export class LeadService {
         if (property_type === "sale") return budget >= 100000;
         return false;
     }
+
+    getLeadByPhone(phone: string): Lead[] {
+        const raw = fs.readFileSync(OUTPUT_PATH, "utf-8");
+        const leads: Lead[] = JSON.parse(raw);
+        return leads.filter(lead => lead.phone === phone);
+    }
 }
